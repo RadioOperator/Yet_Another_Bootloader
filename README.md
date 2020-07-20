@@ -105,6 +105,7 @@ This Yet Another Bootloader (YAB) is for STM32, STM32F4xx, STM32F7xx, STM32F723,
       
 >  b.APP_1 mode  
 >>    If the last loaded BIN file is f723app1.bin, after RESET, in APP_1 mode auto.  
+
 >  c.APP_2 mode  
 >>    If the last loaded BIN file is f723app2.bin, after RESET, in APP_2 mode auto.  
       
