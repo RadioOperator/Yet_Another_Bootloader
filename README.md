@@ -7,6 +7,7 @@ This Yet Another Bootloader (YAB) is for STM32, STM32F4xx, STM32F7xx, STM32F723,
 ### 1.General Info of this project:  
 
 >  Hardware Board: STLINK-V3MINI (STM factory firmware erased)  
+>>  please visit https://github.com/RadioOperator/CMSIS-DAP_for_STLINK-V3MINI for hardware details.
     
 >  IDE: ARM MDK/Keil v5.xx, STM32CubeMX, ARM RTE  
   
