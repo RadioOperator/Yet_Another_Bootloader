@@ -14,22 +14,22 @@ This Yet Another Bootloader (YAB) is for STM32, STM32F4xx, STM32F7xx, STM32F723,
 >  RAM:        256KB  
 >  Flash ROM:  512KB  
     
->  RAM MSC Drive:  0x20010000 - 0x2003FFFF  192KB  
+>  RAM MSC Drive ---- 0x20010000 - 0x2003FFFF  192KB  
       
 >  Flash Memory Map:  
->>    Bootloader    0x08000000 - 0x0800FFFF  64KB, Bootloader   
+>>    Bootloader ---- 0x08000000 - 0x0800FFFF  64KB, Bootloader   
   
->>    User APP_1    0x08010000 - 0x0803A000  ~170KB, MSC upload  
->>    User APP_2    0x08040000 - 0x0806A000  ~170KB, MSC upload  
+>>    User APP_1 ---- 0x08010000 - 0x0803A000  ~170KB, MSC upload  
+>>    User APP_2 ---- 0x08040000 - 0x0806A000  ~170KB, MSC upload  
       
->>    Reserved      0X0803A000 - 0x0803FFFF  ~24KB, APP can use  
->>    Reserved      0x0806A000 - 0x0807FFFF  ~88KB, APP can use  
+>>    Reserved -------  0X0803A000 - 0x0803FFFF  ~24KB, APP can use  
+>>    Reserved -------  0x0806A000 - 0x0807FFFF  ~88KB, APP can use  
     
 >  Bootloader GPIO:  
 >>    Suggest to add 3 Buttons(to GND):  
->>>      IC Reset Pin, CN4 on-board connector, Hardware RESET.  
->>>      PA6/nRESET Pin, Entry the Bootloader mode when grounding it before power-on/RESET.  
->>>      PA7 Pin, Toggle to running APP_1/APP_2, grounding it before power-on/RESET.  
+>>      IC Reset Pin, CN4 on-board connector, Hardware RESET.  
+>>      PA6/nRESET Pin, Entry the Bootloader mode when grounding it before power-on/RESET.  
+>>      PA7 Pin, Toggle to running APP_1/APP_2, grounding it before power-on/RESET.  
       
 >  Bootloader used LED status:  
 >>    Green/Red slow blinking, Bootloader mode, waiting upload APP_1/APP_2.  
