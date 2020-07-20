@@ -8,7 +8,7 @@ This Yet Another Bootloader (YAB) is for STM32, STM32F4xx, STM32F7xx, STM32F723,
 
 >  Hardware Board: STLINK-V3MINI (STM factory firmware erased)  
     
->  IDE: MDK / Keil v5.xx  
+>  IDE: ARM MDK/Keil v5.xx, STM32CubeMX, ARM RTE  
   
 >  MCU:        STM32F723IEK6  
 >  RAM:        256KB  
