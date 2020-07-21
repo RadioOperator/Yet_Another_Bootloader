@@ -53,9 +53,7 @@ YAB, easy to port to any other MCU with USB port.
 >  b. Set RAM1 start from 0x20010000 192KB size 0x30000(192KB), name "RAM_Drive"  
 >  c. Set IRAM1 start from 0x20000000 size 0x10000(64KB)  
 >  d. Other settings, refer to YAB project files.  
->  e. Build and Load the Bootloader into F723 IC via SWD port.  
-    
->  f. The Scatter file to link the Bootloader:  
+>  e. The Scatter file to link the Bootloader:  
 <pre>
     ;--------------------------------------  
     LR_IROM1 0x08000000 0x00010000  {    ; load region size_region  
@@ -76,11 +74,14 @@ YAB, easy to port to any other MCU with USB port.
     ;--------------------------------------  
 </pre>
     
+>  f. Build and Load the Bootloader into F723 IC via SWD port or other ways.  
+    
+    
 ### 3. Build and use your APP_1, filename: f723app1.bin  
     
 >  a. Set Target IROM1 start from 0x08010000 size 0x30000(use 170KB max).  
 >  b. Set IRAM1 start from 0x20000000 size 0x40000(256KB).  
->  c. Modify #define VECT_TAB_OFFSET 0x00 to (0x10000) in "system_stm32f7xx.c" file.  
+>  c. Add `SCB->VTOR = 0x08010000;` in the first line of "main()" function.  
 >  d. Other settings, refer to the sample APP_1 Project files.  
 >  e. Build and create the target BIN code, name must be "f723app1.bin", file size <=170KB.  
 >  f. Grounding PA6, Restart/RESET the Device into "MSC Bootloader mode".  
@@ -92,7 +93,7 @@ YAB, easy to port to any other MCU with USB port.
     
 >  a. Set Target IROM1 start from 0x08040000 size 0x30000(use 170KB max).  
 >  b. Set IRAM1 start from 0x20000000 size 0x40000(256KB).  
->  c. Modify #define VECT_TAB_OFFSET 0x00 to (0x40000) in "system_stm32f7xx.c" file.  
+>  c. Add `SCB->VTOR = 0x08040000;` in the first line of "main()" function.  
 >  d. Other settings, refer to the sample APP_2 Project files.  
 >  e. Build and create the target BIN code, name must be "f723app2.bin", file size <=170KB.  
 >  f. Grounding PA6, Restart/RESET the Device into "MSC Bootloader mode".  
@@ -130,5 +131,5 @@ YAB, easy to port to any other MCU with USB port.
     
 ### 7. Declarations:  
   
->  The project is for experiments only. Use any parts and info on/at your own risks.  
+>  The project is for experiments only. Use any parts and info on your own risks.  
   
