@@ -25,8 +25,12 @@
 //    Yet Another Bootloader (YAB)
 //
 //    "YAB": Free to use, Easy to use, Intelligent
+//
+//    This YAB is for STLINK-V3 use, and coexist with the original Factory Bootloader.
+//
+//    Start address: 0x08020000
 //    
-//    RadioOperator 2020-07-17
+//    RadioOperator 2020-07-24
 //
 //------------------------------------------------------------------------------
 
@@ -45,16 +49,18 @@
 #include "Flash.h"
 
 
-#define APP1_FILE_NAME            "F723APP1BIN"                       //APP1 file name: = f723app1.bin
-#define APP2_FILE_NAME            "F723APP2BIN"                       //APP2 file name: = f723app2.bin
+#define APP1_FILE_NAME            "SLV3APP1BIN"                       //APP1 file name: = slv3app1.bin
+#define APP2_FILE_NAME            "SLV3APP2BIN"                       //APP2 file name: = slv3app2.bin
 #define APP_ID_STRING             "APPINFO#^2$5&7jq(@1ek852"          //APP special string, 24 Bytes
 //                                 123456789012345678901234
 #define APP_FILE_LEN_BIAS         (24)                                //relative location
 #define APP_FILE_CRC_BIAS         (28)                                //relative location
 
-#define FLASH_APP1_START_ADDR     (0x08010000)                        //APP1 Base address, max ~170KB
-#define FLASH_APP2_START_ADDR     (0x08040000)                        //APP2 Base address, max ~170KB
-#define FLASH_APP_MAX_LEN         (0x00030000)                        //192KB
+#define FLASH_YAB_BASE_ADDR       (0x08020000)                        //YAB Base address, 112KB max
+
+#define FLASH_APP1_START_ADDR     (0x08040000)                        //APP1 Base address, max ~128KB
+#define FLASH_APP2_START_ADDR     (0x08060000)                        //APP2 Base address, max ~128KB
+#define FLASH_APP_MAX_LEN         (0x00020000)                        //128KB
 
 #define RAM_DRIVE_BASE            (0x20010000)
 #define FILE_DIR_BASE             (RAM_DRIVE_BASE + 0x00001000)       //=0x20011000
@@ -64,8 +70,8 @@
 #define FILE_START_REF_ADDR       (RAM_DRIVE_BASE + 0x00004C00)       //the first file start: 0x20015600 (cluster=5)
 #define FILE_CLUSTER_SIZE         (0x200)                             //=Sector size = 512
 
-#define FLASH_DEF_APP_BASE        (0x0800D000)                        //default APP recorder field start address, 12KB max
-#define FLASH_DEF_APP_LEN         (0x00003000)                        //Len=3000H
+#define FLASH_DEF_APP_BASE        (0x0803C000)                        //default APP recorder field start address, 16KB max
+#define FLASH_DEF_APP_LEN         (0x00004000)                        //Len=4000H
 
 extern uint32_t RamDrive[192*1024/4] __attribute__((section("RAM_Drive"))); //RAM Disk size, 192KB
 
@@ -105,7 +111,8 @@ typedef void (*pFunc)(void);
 static void JumpTo(uint32_t address)
 {
   //disable all IRQ
-  for (uint8_t i=0; i<255; i++) {
+  for (uint8_t i=0; i<255; i++)
+  {
     NVIC_DisableIRQ(i);
   }
   //Vector Table Relocation in FLASH
@@ -284,54 +291,63 @@ __NO_RETURN void BOOTLOADER_Thread (void *argument)
       uint32_t InfoAddress = FileStartAddress + (u32FileLength & 0x0003FFF0) + 0x00000010;
       //cal new file length for Flash write
       uint32_t Len = (u32FileLength & 0x0003FFF0) + 0x00000030;
-      //write APP ID String
-      memcpy((void *)InfoAddress, (void *)APP_ID_STRING, 24);
-      //write file size
-      memcpy((void *)InfoAddress+APP_FILE_LEN_BIAS, &u32FileLength, 4);
-      //write CRC32 word
-      memcpy((void *)InfoAddress+APP_FILE_CRC_BIAS, &u32FileCRC32, 4);
-      
-      //FLASH_Erase(const uint32_t start_addr, const uint32_t end_addr);
-      if (0 != FLASH_Erase(u32TargetFlashAddress, u32TargetFlashAddress+FLASH_APP_MAX_LEN-1))
+      //limit data Len <= 128KB
+      if (Len <= FLASH_APP_MAX_LEN)
       {
-        status = 1;
-      }
-      //int Flash_Write(const uint32_t WriteAddr, const uint32_t *const pBuffer, const uint32_t NumToWrite)
-      if (0 != Flash_Write_Force(u32TargetFlashAddress, (const void *)FileStartAddress, Len/4))
-      {
-        status += 1;
-      }
-      //set default APP
-      if (status == 0)
-      {
-        LED_Mode = LED_GREEN_ONLY; //all OK
-        //set the programmed flag
-        u32AppLoaded = 1;
-        //set default APP, according to the last write field
-        if (u32TargetFlashAddress == FLASH_APP1_START_ADDR)
+        //write APP ID String
+        memcpy((void *)InfoAddress, (void *)APP_ID_STRING, 24);
+        //write file size
+        memcpy((void *)InfoAddress+APP_FILE_LEN_BIAS, &u32FileLength, 4);
+        //write CRC32 word
+        memcpy((void *)InfoAddress+APP_FILE_CRC_BIAS, &u32FileCRC32, 4);
+        
+        //FLASH_Erase(const uint32_t start_addr, const uint32_t end_addr);
+        if (0 != FLASH_Erase(u32TargetFlashAddress, u32TargetFlashAddress+FLASH_APP_MAX_LEN-1))
         {
-          if (bCheckAPP(FLASH_APP1_START_ADDR))
+          status = 1;
+        }
+        //int Flash_Write(const uint32_t WriteAddr, const uint32_t *const pBuffer, const uint32_t NumToWrite)
+        if (0 != Flash_Write_Force(u32TargetFlashAddress, (const void *)FileStartAddress, Len/4))
+        {
+          status += 1;
+        }
+        //set default APP
+        if (status == 0)
+        {
+          LED_Mode = LED_GREEN_ONLY; //all OK
+          //set the programmed flag
+          u32AppLoaded = 1;
+          //set default APP, according to the last write field
+          if (u32TargetFlashAddress == FLASH_APP1_START_ADDR)
           {
-            bSetDefaultAPP(1);
-            JumpTo(FLASH_APP1_START_ADDR); //goto APP1, for USB project, need Hardware Reset.
+            if (bCheckAPP(FLASH_APP1_START_ADDR))
+            {
+              bSetDefaultAPP(1);
+              JumpTo(FLASH_APP1_START_ADDR); //goto APP1, for USB project, need Hardware Reset.
+            }
+            else
+            {
+              LED_Mode = LED_RED_ONLY;   //error
+            }
           }
-          else
+          else if (u32TargetFlashAddress == FLASH_APP2_START_ADDR)
           {
-            LED_Mode = LED_RED_ONLY;   //error
+            if (bCheckAPP(FLASH_APP2_START_ADDR))
+            {
+              bSetDefaultAPP(2);
+              JumpTo(FLASH_APP2_START_ADDR); //goto APP2, for USB project, need Hardware Reset.
+            }
+            else
+            {
+              LED_Mode = LED_RED_ONLY;   //error
+            }
           }
         }
-        else if (u32TargetFlashAddress == FLASH_APP2_START_ADDR)
+        else
         {
-          if (bCheckAPP(FLASH_APP2_START_ADDR))
-          {
-            bSetDefaultAPP(2);
-            JumpTo(FLASH_APP2_START_ADDR); //goto APP2, for USB project, need Hardware Reset.
-          }
-          else
-          {
-            LED_Mode = LED_RED_ONLY;   //error
-          }
+          LED_Mode = LED_RED_ONLY;   //error
         }
+        break;
       }
       else
       {
@@ -355,6 +371,14 @@ __NO_RETURN void BOOTLOADER_Thread (void *argument)
   */
 int main(void)
 {
+  //disable all IRQ
+  for (uint8_t i=0; i<255; i++)
+  {
+    NVIC_DisableIRQ(i);
+  }
+  //Vector Table Relocation in FLASH
+  SCB->VTOR = FLASH_YAB_BASE_ADDR;
+  
   /* This project template calls firstly two functions in order to configure MPU feature 
      and to enable the CPU Cache, respectively MPU_Config() and CPU_CACHE_Enable().
      These functions are provided as template implementation that User may integrate 

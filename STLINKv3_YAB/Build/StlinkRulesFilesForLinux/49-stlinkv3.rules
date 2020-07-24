@@ -1,0 +1,18 @@
+# stlink-v3 boards (standalone and embedded) in usbloader mode and standard (debug) mode
+
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374d", \
+    MODE="660", GROUP="plugdev", TAG+="uaccess", \
+    SYMLINK+="stlinkv3loader_%n"
+
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374e", \
+    MODE="660", GROUP="plugdev", TAG+="uaccess", \
+    SYMLINK+="stlinkv3_%n"
+
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="374f", \
+    MODE="660", GROUP="plugdev", TAG+="uaccess", \
+    SYMLINK+="stlinkv3_%n"
+
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="3753", \
+    MODE="660", GROUP="plugdev", TAG+="uaccess", \
+    SYMLINK+="stlinkv3_%n"
+
