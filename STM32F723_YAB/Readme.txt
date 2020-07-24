@@ -52,7 +52,7 @@ This YAB (project: STM32F723_YAB) uses on a blank STM32F723 IC, or erased STLINK
   YAB VCP Function: USART6 (PG9_Tx / PG14_Rx).  
     
     
-2. Build/Edit a new YAB:  
+2. Edit/Build/Flash a new YAB for STM32 IC:  
     
   a. Set Target IROM1 start from 0x08000000 size 0x10000(64KB)  
   b. Set RAM1 start from 0x20010000 192KB size 0x30000(192KB), name "RAM_Drive"  
@@ -78,6 +78,7 @@ This YAB (project: STM32F723_YAB) uses on a blank STM32F723 IC, or erased STLINK
     ;--------------------------------------  
     
   f. Build and Load YAB into F723 IC via SWD port or other ways.  
+  g. note: before you modify YAB, you could try and test the pre-built code.  
     
     
 3. Build and use your APP_1, filename: f723app1.bin  

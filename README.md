@@ -5,6 +5,8 @@ YAB, Free to use / Easy to use / Intelligent
 YAB, a PC MSC drive to Drag&Drop your App BIN code to flash the STM32F723 IC, no other Host software needed.  
 YAB, easy to port to any other MCU with USB port.  
 
+For Hardware info, refer to: https://github.com/RadioOperator/CMSIS-DAP_for_STLINK-V3MINI  
+
 There are two projects in this repo:
 
 ### 1. YAB co-exist with STLINK-V3 Factory Bootloader:

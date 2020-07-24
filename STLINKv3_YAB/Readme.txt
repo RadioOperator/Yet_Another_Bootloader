@@ -23,7 +23,7 @@ The STLINK-V3 with this YAB, there are 4 modes in it:
   
 1. General Info of STLINKv3_YAB project:  
 
-  Hardware Board: STLINK-V3MINI (STM factory firmware erased)  
+  Hardware Board: STLINK-V3MINI (Do not erase the Factory Bootloader!!!)  
   please visit https://github.com/RadioOperator/CMSIS-DAP_for_STLINK-V3MINI for hardware details.
     
   IDE: ARM MDK/Keil v5.xx, STM32CubeMX, ARM RTE  
@@ -58,7 +58,7 @@ The STLINK-V3 with this YAB, there are 4 modes in it:
   YAB VCP Function: USART6 (PG9_Tx / PG14_Rx).  
     
     
-2. Build/Edit a new YAB:  
+2. Edit/Build/Flash a new YAB for STLINK-V3:  
     
   a. Set Target IROM1 start from 0x08020000 size 0x20000(64KB)  
   b. Set RAM1 start from 0x20010000 192KB size 0x30000(192KB), name "RAM_Drive"  
@@ -88,6 +88,7 @@ The STLINK-V3 with this YAB, there are 4 modes in it:
   h. Plug STLINK-V3 USB, RESET to the Factory bootloader Mode.
   i. run Write-to-stlink-v3.bat to flash YAB into the device.
   j. note: your PC Windows/Java have to be setup correctly for all.
+     note: before you modify YAB, you could try and test the pre-built code.  
     
     
 3. Build and use your APP_1, filename: slv3app1.bin  
