@@ -117,18 +117,21 @@ The STLINK-V3 with this YAB, there are 4 modes in it:
       
 5. Use the Startup Mode:  
   
-  a. MSC YAB mode  
+  a. STLINK-V3 Factory Bootloader Mode
+    Plug USB to PC first, then RESET, the LED stable to RED color.
+    
+  b. MSC YAB mode  
     Grounding the PA6/nRESET Pin before power-on/RESET.  
     The LED is blinking and a MSC drive on Host PC auto generated, name is "APP_HERE".  
     If APP_1 or APP_2 not loaded, the device always into YAB mode.  
       
-  b. APP_1 mode  
+  c. APP_1 mode  
     If the last loaded BIN file is slv3app1.bin, after RESET, in APP_1 mode auto.  
 
-  c. APP_2 mode  
+  d. APP_2 mode  
     If the last loaded BIN file is slv3app2.bin, after RESET, in APP_2 mode auto.  
       
-  d. Toggle APP_1/APP_2 mode  
+  e. Toggle APP_1/APP_2 mode  
     Grounding the PA7 Pin before power-on/RESET.  
       
       
