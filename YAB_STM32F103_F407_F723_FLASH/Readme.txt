@@ -31,7 +31,7 @@ Build/Edit/Flash YAB:
 
 Build and use your APP:
   a. Set Target IROM1 start from 0x08004000.  
-  b. Add { SCB->VTOR = 0x08040000; } in the first line of "main()" function.
+  b. Add { SCB->VTOR = 0x08004000; } in the first line of "main()" function.
   c. Build and create the target BIN code.
   d. Connect the GPIO (Button/Wire) to GND.
   e. Restart/RESET the Device into "YAB mode".  
